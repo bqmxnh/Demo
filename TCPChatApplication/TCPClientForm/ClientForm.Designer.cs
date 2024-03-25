@@ -49,7 +49,7 @@
             // 
             // SendButton
             // 
-            SendButton.Location = new Point(676, 404);
+            SendButton.Location = new Point(712, 404);
             SendButton.Name = "SendButton";
             SendButton.Size = new Size(112, 34);
             SendButton.TabIndex = 1;
@@ -61,7 +61,7 @@
             // 
             MessageTextBox.Location = new Point(12, 407);
             MessageTextBox.Name = "MessageTextBox";
-            MessageTextBox.Size = new Size(658, 31);
+            MessageTextBox.Size = new Size(694, 31);
             MessageTextBox.TabIndex = 2;
             // 
             // ChatTextBox
@@ -69,7 +69,7 @@
             ChatTextBox.Location = new Point(12, 57);
             ChatTextBox.Multiline = true;
             ChatTextBox.Name = "ChatTextBox";
-            ChatTextBox.Size = new Size(776, 325);
+            ChatTextBox.Size = new Size(812, 325);
             ChatTextBox.TabIndex = 3;
             // 
             // ConnectionStatusLabel
@@ -101,7 +101,7 @@
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(836, 450);
             Controls.Add(label1);
             Controls.Add(NicknameTextBox);
             Controls.Add(ConnectionStatusLabel);

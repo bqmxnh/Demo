@@ -8,11 +8,17 @@ namespace TCPClientForm
 {
     public partial class ClientForm : Form
     {
+        // Đối tượng TCPClient để kết nối đến máy chủ
         private TcpClient? client;
+        // Gửi và nhận dữ liệu qua kết nối
         private NetworkStream? stream;
+        // Xử lý việc nhận nhin nahwns từ máy chủ
         private Thread? thread;
+        // Kiểm tra server và client có đang connect không
         private bool isConnected = false;
+        // Form đóng bởi người dùng
         private bool isClosingByButton = false;
+        // Lưu biệt danh
         private string? nickname;
 
         public ClientForm()
@@ -20,7 +26,7 @@ namespace TCPClientForm
             InitializeComponent();
             this.FormClosing += new FormClosingEventHandler(ClientForm_FormClosing);
         }
-
+        //  Kết nối đến máy chủ với địa chỉ IP và cổng được chỉ định. Sau đó, nó gửi biệt danh của người dùng đến máy chủ và bắt đầu một luồng mới để nhận tin nhắn từ máy chủ.
         private void ConnectButton_Click(object sender, EventArgs e)
         {
             client = new TcpClient();
@@ -41,7 +47,7 @@ namespace TCPClientForm
                 MessageBox.Show("Failed to connect to server: " + ex.Message);
             }
         }
-
+        // Gửi tin nhắn từ người dùng đến máy chủ thông qua luồng kết nối stream.
         private void SendButton_Click(object sender, EventArgs e)
         {
             if (isConnected && stream != null) // Kiểm tra stream có null hay không
@@ -59,7 +65,7 @@ namespace TCPClientForm
             }
         }
 
-
+        // Nhận tin nhắn từ máy chủ. Nó luôn lắng nghe cho đến khi máy khách được ngắt kết nối hoặc có lỗi xảy ra. Mỗi khi nhận được một tin nhắn từ máy chủ, nó cập nhật hộp văn bản chat trên giao diện người dùng.
         private void ReceiveMessages()
         {
             while (isConnected && stream != null) // Kiểm tra stream có null hay không
@@ -93,7 +99,7 @@ namespace TCPClientForm
         }
 
 
-
+        // Cập nhật nội dung hộp văn bản chat trên giao diện người dùng.
         private void UpdateChatBox(string message)
         {
             if (InvokeRequired)
@@ -104,6 +110,7 @@ namespace TCPClientForm
             ChatTextBox.AppendText(message + Environment.NewLine);
         }
 
+        // Cập nhật trạng thái kết nối trên giao diện người dùng.
         private void UpdateConnectionStatus()
         {
             if (InvokeRequired)
@@ -114,6 +121,7 @@ namespace TCPClientForm
             ConnectionStatusLabel.Text = isConnected ? "Connected" : "Disconnected";
         }
 
+        // Xử lý khi người dùng đóng form.
         private void ClientForm_FormClosing(object? sender, FormClosingEventArgs e)
         {
             isClosingByButton = e.CloseReason == CloseReason.UserClosing;
