@@ -8,12 +8,12 @@ namespace TCPClientForm
 {
     public partial class ClientForm : Form
     {
-        private TcpClient client;
-        private NetworkStream stream;
-        private Thread thread;
+        private TcpClient? client;
+        private NetworkStream? stream;
+        private Thread? thread;
         private bool isConnected = false;
         private bool isClosingByButton = false;
-        private string nickname;
+        private string? nickname;
 
         public ClientForm()
         {
@@ -44,7 +44,7 @@ namespace TCPClientForm
 
         private void SendButton_Click(object sender, EventArgs e)
         {
-            if (isConnected)
+            if (isConnected && stream != null) // Kiểm tra stream có null hay không
             {
                 string message = MessageTextBox.Text;
                 byte[] messageData = Encoding.UTF8.GetBytes(message);
@@ -59,9 +59,10 @@ namespace TCPClientForm
             }
         }
 
+
         private void ReceiveMessages()
         {
-            while (isConnected)
+            while (isConnected && stream != null) // Kiểm tra stream có null hay không
             {
                 byte[] data = new byte[4096];
                 int bytesRead = 0;
@@ -92,6 +93,7 @@ namespace TCPClientForm
         }
 
 
+
         private void UpdateChatBox(string message)
         {
             if (InvokeRequired)
@@ -112,7 +114,7 @@ namespace TCPClientForm
             ConnectionStatusLabel.Text = isConnected ? "Connected" : "Disconnected";
         }
 
-        private void ClientForm_FormClosing(object sender, FormClosingEventArgs e)
+        private void ClientForm_FormClosing(object? sender, FormClosingEventArgs e)
         {
             isClosingByButton = e.CloseReason == CloseReason.UserClosing;
             if (isClosingByButton)
@@ -121,5 +123,6 @@ namespace TCPClientForm
                 Environment.Exit(0);
             }
         }
+
     }
 }

@@ -10,7 +10,7 @@ namespace TCPChatServer
 {
     public partial class ServerForm : Form
     {
-        private TcpListener listener;
+        private TcpListener? listener;
         private List<TcpClient> clients = new List<TcpClient>();
         private Dictionary<TcpClient, string> clientNicknames = new Dictionary<TcpClient, string>();
         private bool isClosingByButton = false;
@@ -39,7 +39,7 @@ namespace TCPChatServer
 
         private void ListenForClients()
         {
-            while (true)
+            while (true && listener != null)
             {
                 TcpClient client = listener.AcceptTcpClient();
                 clients.Add(client);
@@ -55,8 +55,9 @@ namespace TCPChatServer
             return messageStr.Contains("[Server]");
         }
 
-        private void HandleClientComm(object client)
+        private void HandleClientComm(object? client)
         {
+            if (client == null) return; // Kiểm tra tránh trường hợp client null
             TcpClient tcpClient = (TcpClient)client;
             NetworkStream clientStream = tcpClient.GetStream();
 
@@ -149,7 +150,7 @@ namespace TCPChatServer
         }
 
 
-        private void ServerForm_FormClosing(object sender, FormClosingEventArgs e)
+        private void ServerForm_FormClosing(object? sender, FormClosingEventArgs e)
         {
             isClosingByButton = e.CloseReason == CloseReason.UserClosing;
             if (isClosingByButton)
