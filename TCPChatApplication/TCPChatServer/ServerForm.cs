@@ -10,9 +10,13 @@ namespace TCPChatServer
 {
     public partial class ServerForm : Form
     {
+        // Lắng nghe kết nối từ máy khách
         private TcpListener? listener;
+        // Danh sách clients
         private List<TcpClient> clients = new List<TcpClient>();
+        // Nickname của clients
         private Dictionary<TcpClient, string> clientNicknames = new Dictionary<TcpClient, string>();
+       // Form đóng bởi người dùng 
         private bool isClosingByButton = false;
 
         public ServerForm()
@@ -20,7 +24,7 @@ namespace TCPChatServer
             InitializeComponent();
             this.FormClosing += new FormClosingEventHandler(ServerForm_FormClosing);
         }
-
+        // Nhấn nút, khởi tạo TCP listener, lắng nghe  kết nối từ máy khách 
         private void StartServerButton_Click_1(object sender, EventArgs e)
         {
             IPAddress ip = IPAddress.Parse("127.0.0.1");
@@ -36,7 +40,7 @@ namespace TCPChatServer
             Thread acceptThread = new Thread(new ThreadStart(ListenForClients));
             acceptThread.Start();
         }
-
+        // Vòng lặp liên tục lắng nghe khết nối từ máy khác, mỗi khi có nết nối mới được chấp nhận,một luồng mới sẽ được tạo để xử lý kết nối đó (HandleClientComm).
         private void ListenForClients()
         {
             while (true && listener != null)
@@ -54,7 +58,7 @@ namespace TCPChatServer
             string messageStr = Encoding.UTF8.GetString(message);
             return messageStr.Contains("[Server]");
         }
-
+        // Xử lý việc giao tiếp với một máy khách cụ thể.
         private void HandleClientComm(object? client)
         {
             if (client == null) return; // Kiểm tra tránh trường hợp client null
@@ -134,7 +138,7 @@ namespace TCPChatServer
                 ServerMessageTextBox.Clear();
             }
         }
-
+        // Cập nhật nội dung 
         private void UpdateStatus(string message)
         {
             if (InvokeRequired)
@@ -142,14 +146,13 @@ namespace TCPChatServer
                 Invoke(new Action<string>(UpdateStatus), message);
                 return;
             }
-            // Kiểm tra nếu chuỗi kết thúc bằng ký tự xuống dòng thì không thêm vào cuối
             if (message.EndsWith(Environment.NewLine))
                 StatusTextBox.AppendText(message);
             else
                 StatusTextBox.AppendText(message + Environment.NewLine);
         }
 
-
+        // Xử lý khi người dùng đóng form.
         private void ServerForm_FormClosing(object? sender, FormClosingEventArgs e)
         {
             isClosingByButton = e.CloseReason == CloseReason.UserClosing;
