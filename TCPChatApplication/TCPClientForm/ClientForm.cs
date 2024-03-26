@@ -66,9 +66,10 @@ namespace TCPClientForm
         }
 
         // Nhận tin nhắn từ máy chủ. Nó luôn lắng nghe cho đến khi máy khách được ngắt kết nối hoặc có lỗi xảy ra. Mỗi khi nhận được một tin nhắn từ máy chủ, nó cập nhật hộp văn bản chat trên giao diện người dùng.
+        // Nhận tin nhắn từ máy chủ.
         private void ReceiveMessages()
         {
-            while (isConnected && stream != null) // Kiểm tra stream có null hay không
+            while (isConnected && stream != null)
             {
                 byte[] data = new byte[4096];
                 int bytesRead = 0;
@@ -89,10 +90,7 @@ namespace TCPClientForm
                 }
 
                 string message = Encoding.UTF8.GetString(data, 0, bytesRead);
-                if (message.Contains("[Server]"))
-                {
-                    UpdateChatBox(message);
-                }
+                UpdateChatBox(message); // Di chuyển dòng này ra ngoài if để không cập nhật thời gian hai lần
             }
         }
 
@@ -106,8 +104,7 @@ namespace TCPClientForm
                 return;
             }
 
-            string formattedMessage = $"[{DateTime.Now.ToString("HH:mm:ss dd/MM/yyyy")}] {message}";
-            ChatTextBox.AppendText(formattedMessage + Environment.NewLine);
+            ChatTextBox.AppendText(message + Environment.NewLine);
         }
 
 

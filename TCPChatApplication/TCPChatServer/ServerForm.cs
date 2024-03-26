@@ -34,9 +34,7 @@ namespace TCPChatServer
 
             string serverStartedMessage = "Server started.";
             UpdateStatus($"{serverStartedMessage}{Environment.NewLine}");
-
             MessageBox.Show(serverStartedMessage);
-
             Thread acceptThread = new Thread(new ThreadStart(ListenForClients));
             acceptThread.Start();
         }
@@ -114,7 +112,7 @@ namespace TCPChatServer
             foreach (TcpClient c in clients)
             {
                 NetworkStream stream = c.GetStream();
-                byte[] serverMessage = Encoding.UTF8.GetBytes($"[Server] {message}{Environment.NewLine}");
+                byte[] serverMessage = Encoding.UTF8.GetBytes($"[Server] {message}");
                 stream.Write(serverMessage, 0, serverMessage.Length);
                 stream.Flush();
             }
