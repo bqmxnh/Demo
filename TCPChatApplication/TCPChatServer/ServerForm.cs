@@ -52,12 +52,7 @@ namespace TCPChatServer
             }
         }
 
-        private bool isMessageFromServer(byte[] message)
-        {
-            // Kiểm tra xem tin nhắn có chứa dấu ngoặc vuông mở hay không (đánh dấu tin nhắn từ máy chủ)
-            string messageStr = Encoding.UTF8.GetString(message);
-            return messageStr.Contains("[Server]");
-        }
+
         // Xử lý việc giao tiếp với một máy khách cụ thể.
         private void HandleClientComm(object? client)
         {
@@ -91,20 +86,18 @@ namespace TCPChatServer
                     break;
                 }
 
-                string receivedMessage = $"{DateTime.Now.ToString("[HH:mm:ss]")} [{clientNicknames[tcpClient]}]: {Encoding.UTF8.GetString(message, 0, bytesRead)}";
+                string currentDate = DateTime.Now.ToString("[HH:mm:ss dd/MM/yyyy]");
+                string receivedMessage = $"{currentDate} [{clientNicknames[tcpClient]}]: {Encoding.UTF8.GetString(message, 0, bytesRead)}";
                 UpdateStatus($"Received from client: {receivedMessage}");
 
-                if (!isMessageFromServer(message)) // Chỉ gửi tin nhắn từ máy khách đến tất cả máy khách trừ máy gửi
+                foreach (TcpClient c in clients)
                 {
-                    foreach (TcpClient c in clients)
+                    if (c != tcpClient)
                     {
-                        if (c != tcpClient)
-                        {
-                            NetworkStream stream = c.GetStream();
-                            byte[] broadcastMessage = Encoding.UTF8.GetBytes(receivedMessage + Environment.NewLine);
-                            stream.Write(broadcastMessage, 0, broadcastMessage.Length);
-                            stream.Flush();
-                        }
+                        NetworkStream stream = c.GetStream();
+                        byte[] broadcastMessage = Encoding.UTF8.GetBytes(receivedMessage + Environment.NewLine);
+                        stream.Write(broadcastMessage, 0, broadcastMessage.Length);
+                        stream.Flush();
                     }
                 }
             }

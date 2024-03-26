@@ -90,11 +90,8 @@ namespace TCPClientForm
 
                 string message = Encoding.UTF8.GetString(data, 0, bytesRead);
 
-                // Chỉ hiển thị tin nhắn từ máy chủ
-                if (message.Contains("[Server]"))
-                {
                     UpdateChatBox(message);
-                }
+                
             }
         }
 
@@ -107,8 +104,11 @@ namespace TCPClientForm
                 Invoke(new Action<string>(UpdateChatBox), message);
                 return;
             }
-            ChatTextBox.AppendText(message + Environment.NewLine);
+
+            string formattedMessage = $"[{DateTime.Now.ToString("HH:mm:ss dd/MM/yyyy")}] {message}";
+            ChatTextBox.AppendText(formattedMessage + Environment.NewLine);
         }
+
 
         // Cập nhật trạng thái kết nối trên giao diện người dùng.
         private void UpdateConnectionStatus()
