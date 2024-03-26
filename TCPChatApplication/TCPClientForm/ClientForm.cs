@@ -89,9 +89,10 @@ namespace TCPClientForm
                 }
 
                 string message = Encoding.UTF8.GetString(data, 0, bytesRead);
-
+                if (message.Contains("[Server]"))
+                {
                     UpdateChatBox(message);
-                
+                }
             }
         }
 
